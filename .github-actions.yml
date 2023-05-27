@@ -19,7 +19,7 @@ env:
 
 jobs:
   build-and-push-image:
-    runs-on: python:3.10-slim-buster
+    runs-on: python:3.10
     permissions:
       contents: read
       packages: write

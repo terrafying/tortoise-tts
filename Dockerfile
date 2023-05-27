@@ -1,11 +1,11 @@
-FROM python:3.10.4-bullseye
-
-COPY requirements.txt /tmp/requirements.txt
-
-RUN pip install -r /tmp/requirements.txt
+FROM r8.im/afiaka87/tortoise-tts
 
 COPY . /app
 
 WORKDIR /app
 
-RUN python 
+RUN whoami
+
+ENTRYPOINT [ "/bin/bash" ] 
+
+CMD [ "-c", "bash" ]
