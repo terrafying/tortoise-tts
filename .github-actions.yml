@@ -66,11 +66,13 @@ jobs:
           dockerfile: Dockerfile
           secrets: |
             "github_token=${{ secrets.GITHUB_TOKEN }}"
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
-          
-      # Cache the buildx cache directory for next run
-      - name: Move cache
-        run:
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+          cache-from: type=registry,ref=user/app:latest
+          cache-to: type=inline
+      
+      - name: Store in cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            cache_test/cache_test/**/*.txt
+            cache_test/cache_test/**/*.md
+          key: multiple-files-${{ hashFiles('cache_test/cache_test/**') }}
