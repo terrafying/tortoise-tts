@@ -7,6 +7,9 @@ Tortoise is a text-to-speech program built with the following priorities:
 
 This repo contains all the code needed to run Tortoise TTS in inference mode.
 
+A (*very*) rough draft of the Tortoise paper is now available in doc format. I would definitely appreciate any comments, suggestions or reviews:
+https://docs.google.com/document/d/13O_eyY65i6AkNrN_LdPhpUjGhyTNKYHvDrIvHnHe1GA
+
 ### Version history
 
 #### v2.4; 2022/5/17
@@ -45,8 +48,7 @@ Cool application of Tortoise+GPT-3 (not by me): https://twitter.com/lexman_ai
 
 ### Colab
 
-Colab is the easiest way to try this out. I've put together a notebook you can use here:
-https://colab.research.google.com/drive/1wVVqUPqwiDBUVeWWOUNglpGhU3hg_cbR?usp=sharing
+The original colab no longer works by a combination of Google's tendency to forward-break things and Python's package management system. I do not intend to keep fixing it so it has been removed. Apologies!
 
 ### Local Installation
 
@@ -61,6 +63,7 @@ Next, install TorToiSe and it's dependencies:
 ```shell
 git clone https://github.com/neonbjb/tortoise-tts.git
 cd tortoise-tts
+python -m pip install -r ./requirements.txt
 python setup.py install
 ```
 
@@ -117,7 +120,7 @@ For the those in the ML space: this is created by projecting a random vector ont
 
 This repo comes with several pre-packaged voices. Voices prepended with "train_" came from the training set and perform
 far better than the others. If your goal is high quality speech, I recommend you pick one of them. If you want to see
-what Tortoise can do for zero-shot mimicing, take a look at the others.
+what Tortoise can do for zero-shot mimicking, take a look at the others.
 
 ### Adding a new voice
 
@@ -249,7 +252,7 @@ of the model increases multiplicatively. On enterprise-grade hardware, this is n
 exceptionally wide buses that can accommodate this bandwidth. I cannot afford enterprise hardware, though, so I am stuck.
 
 I want to mention here
-that I think Tortoise could do be a **lot** better. The three major components of Tortoise are either vanilla Transformer Encoder stacks
+that I think Tortoise could be a **lot** better. The three major components of Tortoise are either vanilla Transformer Encoder stacks
 or Decoder stacks. Both of these types of models have a rich experimental history with scaling in the NLP realm. I see no reason
 to believe that the same is not true of TTS.
 
@@ -268,6 +271,7 @@ credit a few of the amazing folks in the community that have helped make this ha
 - [Ramesh et al](https://arxiv.org/pdf/2102.12092.pdf) who authored the DALLE paper, which is the inspiration behind Tortoise.
 - [Nichol and Dhariwal](https://arxiv.org/pdf/2102.09672.pdf) who authored the (revision of) the code that drives the diffusion model.
 - [Jang et al](https://arxiv.org/pdf/2106.07889.pdf) who developed and open-sourced univnet, the vocoder this repo uses.
+- [Kim and Jung](https://github.com/mindslab-ai/univnet) who implemented univnet pytorch model.
 - [lucidrains](https://github.com/lucidrains) who writes awesome open source pytorch models, many of which are used here.
 - [Patrick von Platen](https://huggingface.co/patrickvonplaten) whose guides on setting up wav2vec were invaluable to building my dataset.
 
