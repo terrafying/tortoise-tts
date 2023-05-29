@@ -4,8 +4,11 @@ COPY . /app
 
 WORKDIR /app
 
-RUN whoami
+COPY install-cog.sh .
+
+RUN curl -o /usr/local/bin/cog -L https://github.com/replicate/cog/releases/latest/download/cog_`uname -s`_`uname -m` \
+    && chmod +x /usr/local/bin/cog
 
 ENTRYPOINT [ "/bin/bash" ] 
 
-CMD [ "-c", "bash" ]
+CMD [ ]

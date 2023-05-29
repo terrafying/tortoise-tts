@@ -19,7 +19,7 @@ env:
 
 jobs:
   build-and-push-image:
-    runs-on: python:3.10
+    runs-on: python:3.10-slim-buster
     permissions:
       contents: read
       packages: write
@@ -35,6 +35,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GH_TOKEN }}
 
+      - name: Pre-build dev container image
+        uses: devcontainers/ci@v0.3
+        with:
+          imageName: ghcr.io/${{ github.actor }}/example-devcontainer
+          cacheFrom: ghcr.io/${{ github.actor }}/example-devcontainer
+          push: always
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
@@ -55,7 +61,12 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
-
+      - name: Pre-build dev container image
+        uses: devcontainers/ci@v0.3
+        with:
+          imageName: ghcr.io/${{ github.actor }}/example-devcontainer
+          cacheFrom: mcr.microsoft.com/devcontainers/base:bullseye
+          push: always
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
@@ -66,13 +77,5 @@ jobs:
           dockerfile: Dockerfile
           secrets: |
             "github_token=${{ secrets.GITHUB_TOKEN }}"
-          cache-from: type=registry,ref=user/app:latest
+          cache-from: type=registry,ref=terrafying/tortoise-tts:latest
           cache-to: type=inline
-      
-      - name: Store in cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            cache_test/cache_test/**/*.txt
-            cache_test/cache_test/**/*.md
-          key: multiple-files-${{ hashFiles('cache_test/cache_test/**') }}
