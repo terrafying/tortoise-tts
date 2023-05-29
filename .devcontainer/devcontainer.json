@@ -7,9 +7,10 @@
 
 	"features": {
 		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
-			"version": "latest",
-			"enableNonRootDocker": "true",
-			"moby": "true"
+			"moby": true,
+			"installDockerBuildx": true,
+			"version": "20.10",
+			"dockerDashComposeVersion": "v2"
 		},
 		"ghcr.io/devcontainers/features/git-lfs:1": {
 			"autoPull": true,
@@ -17,11 +18,13 @@
 		},
 		"ghcr.io/devcontainers/features/python:1": {
 			"installTools": true,
-			"installJupyterlab": true,
-			"version": "3.10"
+			"version": "os-provided"
 		},
 		"ghcr.io/devcontainers-contrib/features/gh-cli:1": {
 			"version": "latest"
+		},
+		"ghcr.io/devcontainers/features/conda:1": {
+			"version": "4.12.0"
 		}
 	},
 

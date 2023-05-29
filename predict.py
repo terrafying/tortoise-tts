@@ -53,6 +53,47 @@ VOICE_OPTIONS = [
 MODULE_DIRECTORY = os.path.dirname(__file__)
 CUSTOM_VOICE_DIRECTORY = Path(MODULE_DIRECTORY, "tortoise", "voices", "custom_voice")
 
+def get_audio_from_youtube(video_id: str, voice_name: str) -> Path:
+    """ Download audio from youtube video and return path to audio file """
+    
+    # use yt-dlp to download audio
+    subprocess.check_output(
+        [
+            "yt-dlp",
+            "--extract-audio",
+            "--audio-format",
+            "mp4",
+            "--audio-quality",
+            "0",
+            "--output",
+            f"{video_id}.%(ext)s",
+            "https://www.youtube.com/watch?v=" + video_id,
+        ]
+    )
+    # convert to mp3
+    """ bash:
+    yt-dlp --no-overwrites -x "$url" --format mp4 -o {name}
+    test -f {name}.mp3 || ffmpeg -i {name}.m4a -c:v copy -c:a libmp3lame -q:a 4 {name}.mp3 
+    for i in range(yt_clip_info['num_clips']):
+    !ffmpeg -y -ss {yt_clip_info['start']} -t {yt_clip_info['time']} -i {name}.mp3 {i}.mp3  # clip it
+    """
+      # convert to mp3
+
+    subprocess.check_output(
+        [
+            "ffmpeg",
+            "-i",
+            f"{video_id}.m4a",
+            "-c:v",
+            "copy",
+            "-c:a",
+            "libmp3lame",
+            "-q:a",
+            "{video_id}.mp3"
+        ]
+    # find the downloaded file
+    audio_file = Path(f"{video_id}.mp3")
+    return audio_file
 
 def create_custom_voice_from_mp3(input_path: str, segment_time: int = 9) -> None:
     CUSTOM_VOICE_DIRECTORY.mkdir(parents=True, exist_ok=True)
@@ -116,13 +157,12 @@ class Predictor(BasePredictor):
             description="(Optional) Create a custom voice based on an mp3 file of a speaker. Audio should be at least 15 seconds, only contain one speaker, and be in mp3 format. Overrides the `voice_a` input.",
             default=None,
         ),
-        voice_b: str = Input(
-            description="(Optional) Create new voice from averaging the latents for `voice_a`, `voice_b` and `voice_c`. Use `disabled` to disable voice mixing.",
-            default="disabled",
-            choices=VOICE_OPTIONS,
+        youtube_url: str = Input(
+            description="(Optional) Create a custom voice based on a youtube video. Overrides the `voice_*` inputs.",
+            default=None
         ),
-        voice_c: str = Input(
-            description="(Optional) Create new voice from averaging the latents for `voice_a`, `voice_b` and `voice_c`. Use `disabled` to disable voice mixing.",
+        voice_b: str = Input(
+            description="(Optional) Create new voice from averaging the latents for `voice_a`, `voice_b`. Use `disabled` to disable voice mixing.",
             default="disabled",
             choices=VOICE_OPTIONS,
         ),
@@ -157,8 +197,6 @@ class Predictor(BasePredictor):
             all_voices = [voice_a]
         if voice_b != "disabled":
             all_voices.append(voice_b)
-        if voice_c != "disabled":
-            all_voices.append(voice_c)
         print(f"Generating text using voices: {all_voices}")
 
         voice_samples, conditioning_latents = load_voices(all_voices)
