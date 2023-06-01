@@ -1,7 +1,7 @@
 # Configuration for Cog ⚙️
 # Reference: https://github.com/replicate/cog/blob/main/docs/yaml.md
 # image: "r8.im/neonbjb/tortoise-tts"
-image: "r8.im/afiaka87/tortoise-tts"
+image: "r8.im/terrafying/eva-tts"
 build:
   gpu: true
   cuda: "11.3"
@@ -67,5 +67,6 @@ build:
     - wget -c 'https://huggingface.co/jbetker/tortoise-tts-v2/resolve/main/.models/vocoder.pth' -P /root/.cache/tortoise/models/
     - wget -c 'https://huggingface.co/jbetker/tortoise-tts-v2/resolve/main/.models/rlg_auto.pth' -P /root/.cache/tortoise/models/
     - wget -c 'https://huggingface.co/jbetker/tortoise-tts-v2/resolve/main/.models/rlg_diffuser.pth' -P /root/.cache/tortoise/models/
+    - pip install yt-dlp
 
 predict: "predict.py:Predictor"

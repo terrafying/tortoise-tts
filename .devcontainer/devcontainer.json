@@ -11,6 +11,17 @@
 			"installDockerBuildx": true,
 			"version": "20.10",
 			"dockerDashComposeVersion": "v2"
+		},
+		"ghcr.io/wxw-matt/devcontainer-features/command_runner:0": {
+			"c1": "sudo curl -o /usr/local/bin/cog -L \"https://github.com/replicate/cog/releases/latest/download/cog_$(uname -s)_$(uname -m)\"",
+			"c2": "sudo chmod +x /usr/local/bin/cog"
+		}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"GitHub.copilot"
+			]
 		}
 	}
 

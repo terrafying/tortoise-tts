@@ -56,6 +56,11 @@ CUSTOM_VOICE_DIRECTORY = Path(MODULE_DIRECTORY, "tortoise", "voices", "custom_vo
 def get_audio_from_youtube(video_id: str, voice_name: str) -> Path:
     """ Download audio from youtube video and return path to audio file """
     
+    # fjjj lazy
+    if video_id.startswith('https://www.youtube.com/watch?v='):
+        video_id = video_id.split('=')[1]
+        print(video_id)
+    
     # use yt-dlp to download audio
     subprocess.check_output(
         [
@@ -70,15 +75,7 @@ def get_audio_from_youtube(video_id: str, voice_name: str) -> Path:
             "https://www.youtube.com/watch?v=" + video_id,
         ]
     )
-    # convert to mp3
-    """ bash:
-    yt-dlp --no-overwrites -x "$url" --format mp4 -o {name}
-    test -f {name}.mp3 || ffmpeg -i {name}.m4a -c:v copy -c:a libmp3lame -q:a 4 {name}.mp3 
-    for i in range(yt_clip_info['num_clips']):
-    !ffmpeg -y -ss {yt_clip_info['start']} -t {yt_clip_info['time']} -i {name}.mp3 {i}.mp3  # clip it
-    """
-      # convert to mp3
-
+    
     subprocess.check_output(
         [
             "ffmpeg",
@@ -91,6 +88,8 @@ def get_audio_from_youtube(video_id: str, voice_name: str) -> Path:
             "-q:a",
             "{video_id}.mp3"
         ]
+    )
+    
     # find the downloaded file
     audio_file = Path(f"{video_id}.mp3")
     return audio_file
@@ -184,6 +183,9 @@ class Predictor(BasePredictor):
     ) -> Path:
         output_dir = Path(tempfile.mkdtemp())
 
+        if youtube_url is not None:
+            get_audio_from_youtube(youtube_url, 'youtube-voice')
+            
         if custom_voice is not None:
             assert (
                 custom_voice.suffix == ".mp3"
